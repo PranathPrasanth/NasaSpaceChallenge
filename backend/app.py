@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import torch
 import numpy as np
 from network import CarbonEmissionModel
@@ -6,12 +7,19 @@ import joblib
 
 
 app = Flask(__name__)
+CORS(app)                            
 
 model = CarbonEmissionModel(15,128,64,1)
 model.eval()
 model.load_state_dict(torch.load("carbon_emission_model.pth"))
 model2 = joblib.load("xgb_carbon_emission_model.pkl")
 
+@app.route("/")
+def home():
+    return jsonify({
+        "status": "online",
+        "service": "NASA Space Challenge Backend"
+    })
 
 @app.route('/send-data', methods=['POST'])
 def receive_data():
