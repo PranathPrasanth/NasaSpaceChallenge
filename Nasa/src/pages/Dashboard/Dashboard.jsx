@@ -60,6 +60,10 @@ const Dashboard = () => {
     const vehicle_type = {"NA":0 , "hybrid":1 , "diesel":3 , "petrol":2}
 
     const handleSendData = async () => {
+
+        console.log("Body =", body);
+        console.log("Sex =", sex);
+
         const dataToSend = {
           "Body Type":body_type[body],
           "Sex":sex_type[sex],
@@ -226,6 +230,8 @@ const Dashboard = () => {
             else{
                 setBody(docs[0]._document.data.value.mapValue.fields.body.stringValue)
                 setSex(docs[0]._document.data.value.mapValue.fields.sex.stringValue)
+                console.log("Firestore Body:", docs[0]._document.data.value.mapValue.fields.body.stringValue);
+                console.log("Firestore Sex:", docs[0]._document.data.value.mapValue.fields.sex.stringValue);
                 setPersonal(true)
             }
         })}
