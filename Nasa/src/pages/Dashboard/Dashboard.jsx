@@ -101,7 +101,7 @@ const Dashboard = () => {
         //       })
         //       return;
         //   }
-          const response = await fetch('/api/send-data', {
+          const response = await fetch('https://nasaspacechallenge-rj3s.onrender.com/send-data', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
