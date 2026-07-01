@@ -182,13 +182,13 @@ const Dashboard = () => {
         }
       };
       
-    const HandleOnSubmit = () => {
+    const HandleOnSubmit = async () => {
         setInput(1)
         
-        handleSendData()
-        onOpen()
+        await handleSendData();
+        onOpen();
         if(personal===false){
-            const personalDocumentRef = collection(db, 'Database', `${user.email}`, 'personal', id);
+            const personalDocumentRef = doc(db,"Database",user.email,"personal",id);
 
             // Update the document with new 'body' and 'sex' values
             updateDoc(personalDocumentRef, {
@@ -212,9 +212,10 @@ const Dashboard = () => {
         if(user){
         onSnapshot(personalSubcollectionRef, (snapshot) => {
             const docs = snapshot.docs
+            if (docs.length === 0) return;
             //console.log(docs)
             //console.log(docs[0].id)
-            setId(docs[0].id)
+            setId(docs[0].id);
             //console.log(docs[0]._document.data.value.mapValue.fields)
             if(docs[0]._document.data.value.mapValue.fields.body.stringValue==="none"){
               
@@ -860,10 +861,10 @@ const Dashboard = () => {
           >
             <Image w="450px" h= "380px" src={tree} position="relative"></Image>
             <Text fontWeight='bold' fontSize="20px" color="black" position="absolute" top="100px" right="100px">
-                {data.data_sent.toFixed(3)} Kg CO<sub>2</sub> Per Month
+                {Number(data?.data_sent ?? 0).toFixed(3)} Kg CO<sub>2</sub> Per Month
             </Text>
             <Text fontWeight='bold' fontSize="20px" color="black" position="absolute" top="400px" right="150px">
-                You owe {Math.floor(data.data_sent / 500)} Trees
+                You owe {Math.floor((data?.data_sent ?? 0) / 500)} Trees
             </Text>
             
           </ModalBody>
