@@ -53,7 +53,10 @@ const Navbar = () => {
   const [pic,setPic] = useState(null)
   const navigate = useNavigate();
   const location = useLocation();
-  const personalSubcollectionRef = collection(db, 'Database', `${email}`, 'personal');
+  const personalSubcollectionRef =
+  email
+    ? collection(db, "Database", email, "personal")
+    : null;
   const carbonFootprintSubcollectionRef = collection(db, 'Database',` ${email}`, 'carbon footprint');
   
 
@@ -77,16 +80,15 @@ const Navbar = () => {
   useEffect(()=>{
     try{
       if(user!==null){
-      onSnapshot(personalSubcollectionRef, (snapshot) => {
-        const docs = snapshot.docs
-  
-        console.log(docs[0]._document.data.value.mapValue.fields)
-        setPersonal(docs[0]._document.data.value.mapValue.fields)
-       
         
-        
-        ////console.log(todo)
-      })
+        onSnapshot(personalSubcollectionRef, (snapshot) => {
+      const docs = snapshot.docs;
+
+      if (docs.length === 0) return;
+
+      console.log(docs[0]._document.data.value.mapValue.fields);
+      setPersonal(docs[0]._document.data.value.mapValue.fields);
+});
       }
     }
     catch(error){
@@ -120,20 +122,38 @@ const Navbar = () => {
       console.log(users.email)
       console.log(users)
       console.log(users.photoURL)
-      if(users){
-        setEmail(users.email)
-        setUser(users)
-        //setPic(users.photoURL)
-        
-        try {
-          setPic(users.photoURL);
-          //console.log(pic)
-          console.log("hi")
-          console.log(pic)
-        } catch (error) {
-          console.log("error",error)
-        }
-      }
+
+      if (users) {
+    setEmail(users.email);
+    setUser(users);
+
+    const personalDocRef = doc(
+        db,
+        "Database",
+        users.email,
+        "personal",
+        "profile"
+    );
+
+    try {
+        await setDoc(
+            personalDocRef,
+            {
+                body: "none",
+                sex: "none"
+            },
+            { merge: true }
+        );
+
+        console.log("Firestore profile created successfully");
+    } catch (err) {
+        console.error("Firestore write failed:", err);
+    }
+
+    setPic(users.photoURL);
+    console.log("hi");
+    console.log(users.photoURL);
+}
       
       
   } catch (error) {
