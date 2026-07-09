@@ -57,7 +57,7 @@ const Navbar = () => {
   email
     ? collection(db, "Database", email, "personal")
     : null;
-  const carbonFootprintSubcollectionRef = collection(db, 'Database',` ${email}`, 'carbon footprint');
+  const carbonFootprintSubcollectionRef = collection(db, "Database", email, "carbon footprint");
   
 
   const handleScroll = () => {
@@ -79,9 +79,8 @@ const Navbar = () => {
 
   useEffect(()=>{
     try{
-      if(user!==null){
-        
-        onSnapshot(personalSubcollectionRef, (snapshot) => {
+      if (user && personalSubcollectionRef) {
+    onSnapshot(personalSubcollectionRef, (snapshot) => {
       const docs = snapshot.docs;
 
       if (docs.length === 0) return;
@@ -95,7 +94,7 @@ const Navbar = () => {
       console.log(error)
     }
     
-   },[user])
+   },[user, email])
  
   const HandleGetStarted = () =>{
     if(email){
