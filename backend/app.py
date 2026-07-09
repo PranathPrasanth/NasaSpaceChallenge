@@ -23,20 +23,34 @@ def home():
 
 @app.route('/send-data', methods=['POST'])
 def receive_data():
-    data = request.json  # Get the JSON data sent from JavaScript
-      # Print data to the console (for demonstration)
-    features = []
-    for i in data:
-        features.append(data[i])
-    #features = torch.tensor(features).type(torch.float32)
-    features = np.array(features).reshape(1,-1)
-    print(features)
-    preds = model2.predict(features)
-    #unscaled = abs(preds*1000-((preds*1000)*(30/100)))
-    #print(float(preds.item()))
-    #print(scaler.inverse_transform(preds))
-    preds = float(preds[0])
-    return jsonify({'status': 'success', 'data_received': data,'data_sent':preds}), 200
+    try:
+        data = request.json
+
+        print("Received JSON:", data)
+
+        features = list(data.values())
+
+        print("Features:", features)
+        print("Feature count:", len(features))
+
+        features = np.array(features, dtype=float).reshape(1, -1)
+
+        print("Shape:", features.shape)
+
+        preds = model2.predict(features)
+
+        return jsonify({
+            "status": "success",
+            "data_sent": float(preds[0])
+        }), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
