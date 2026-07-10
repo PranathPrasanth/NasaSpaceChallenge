@@ -48,7 +48,10 @@ const Dashboard = () => {
     
     //console.log(user)
     const [sex,setSex] = useState(null)
-    let personalSubcollectionRef = collection(db, 'Database', `${user.email}`, 'personal');
+    const personalSubcollectionRef =
+    user?.email
+        ? collection(db, "Database", user.email, "personal")
+        : null;
     const waste_bag = {"small":0 , "medium":1 , "large":2 , "extra large":3}
     const body_type = {"normal":0 ,"underweight":1, "overweight":2,"obese":3}
     const sex_type = {"male":0 , "female":1}
@@ -212,30 +215,35 @@ const Dashboard = () => {
     }
     
     //console.log(user)
-    useEffect(()=>{
-        if(user){
-        onSnapshot(personalSubcollectionRef, (snapshot) => {
-            const docs = snapshot.docs
-            if (docs.length === 0) return;
-            //console.log(docs)
-            //console.log(docs[0].id)
-            setId(docs[0].id);
-            //console.log(docs[0]._document.data.value.mapValue.fields)
-            if(docs[0]._document.data.value.mapValue.fields.body.stringValue==="none"){
-              
-                //console.log("lik")
-                setInput(0);
-                setPersonal(false)
-            }
-            else{
-                setBody(docs[0]._document.data.value.mapValue.fields.body.stringValue)
-                setSex(docs[0]._document.data.value.mapValue.fields.sex.stringValue)
-                console.log("Firestore Body:", docs[0]._document.data.value.mapValue.fields.body.stringValue);
-                console.log("Firestore Sex:", docs[0]._document.data.value.mapValue.fields.sex.stringValue);
-                setPersonal(true)
-            }
-        })}
-    },[user])
+    useEffect(() => {
+    if (!personalSubcollectionRef) return;
+
+    const unsubscribe = onSnapshot(personalSubcollectionRef, (snapshot) => {
+        const docs = snapshot.docs;
+
+        if (docs.length === 0) return;
+
+        setId(docs[0].id);
+
+        if (
+            docs[0]._document.data.value.mapValue.fields.body.stringValue ===
+            "none"
+        ) {
+            setInput(0);
+            setPersonal(false);
+        } else {
+            setBody(
+                docs[0]._document.data.value.mapValue.fields.body.stringValue
+            );
+            setSex(
+                docs[0]._document.data.value.mapValue.fields.sex.stringValue
+            );
+            setPersonal(true);
+        }
+    });
+
+    return unsubscribe;
+}, [personalSubcollectionRef]);
     
   return (
     <Box

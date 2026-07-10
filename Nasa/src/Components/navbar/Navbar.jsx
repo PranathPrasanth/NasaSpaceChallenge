@@ -57,7 +57,10 @@ const Navbar = () => {
   email
     ? collection(db, "Database", email, "personal")
     : null;
-  const carbonFootprintSubcollectionRef = collection(db, "Database", email, "carbon footprint");
+  const carbonFootprintSubcollectionRef =
+  email
+    ? collection(db, "Database", email, "carbon footprint")
+    : null;
   
 
   const handleScroll = () => {
