@@ -1,5 +1,5 @@
 import { Box, Button, Image, useDisclosure } from '@chakra-ui/react';
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, signOut } from "firebase/auth";
 import { useContext, useRef, useState } from "react";
 import { db } from '../Firebase/Firebase';
 import { addDoc, getDocs, setDoc,collection,doc,onSnapshot} from "firebase/firestore";
@@ -115,61 +115,69 @@ const Navbar = () => {
       
     }
   }
-  const HandleSignin = async() =>{
-    try {
-      
-      const userCredentials = await signInWithPopup(auth, provider);
-      //console.log(userCredentials)
-      const users = userCredentials.user;
-      console.log(users.email)
-      console.log(users)
-      console.log(users.photoURL)
+  const HandleSignin = async () => {
+  try {
+    const userCredentials = await signInWithPopup(auth, provider);
+    const users = userCredentials.user;
 
-      if (users) {
-    setEmail(users.email);
-    setUser(users);
+    console.log(users.email);
+    console.log(users);
+    console.log(users.photoURL);
 
-    const personalDocRef = doc(
+    if (users) {
+      setEmail(users.email);
+      setUser(users);
+
+      const personalDocRef = doc(
         db,
         "Database",
         users.email,
         "personal",
         "profile"
-    );
+      );
 
-    try {
+      try {
         await setDoc(
-            personalDocRef,
-            {
-                body: "none",
-                sex: "none"
-            },
-            { merge: true }
+          personalDocRef,
+          {
+            body: "none",
+            sex: "none",
+          },
+          { merge: true }
         );
 
         console.log("Firestore profile created successfully");
-    } catch (err) {
+      } catch (err) {
         console.error("Firestore write failed:", err);
+      }
+
+      setPic(users.photoURL);
     }
-
-    setPic(users.photoURL);
-    console.log("hi");
-    console.log(users.photoURL);
-}
-      
-      
   } catch (error) {
-    console.log("error:", error)
+    console.log("error:", error);
+  } finally {
+    navigate("/Dashboard");
   }
-  finally{
-      
-      navigate('/Dashboard')
-   
+};
 
-  }
-  
-  
-  }
+  const HandleSignOut = async () => {
+    try {
+        await signOut(auth);
+
+        setUser(null);
+        setEmail(null);
+        setPic(null);
+        setPersonal("");
+
+        onClose();
+        navigate("/");
+
+        console.log("User signed out");
+    } catch (error) {
+        console.error("Sign out failed:", error);
+    }
+}
+
   return (
     <div id="navContainer" style = {!navbarColor?theme:{background:"#2c2a2a" , transition:"ease-in-out"}}>
       {/*,borderBottom: "2px solid #4CAF50"*/}
@@ -245,7 +253,7 @@ const Navbar = () => {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerFooter bg="white">
-            <Button sx={{margin:"20px"}} size="md">Sign Out</Button>
+            <Button sx={{margin:"20px"}} size="md" onClick={HandleSignOut}>Sign Out</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
