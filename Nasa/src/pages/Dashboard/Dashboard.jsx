@@ -190,29 +190,36 @@ const Dashboard = () => {
       };
       
     const HandleOnSubmit = async () => {
-        setInput(0)
-        
-        await handleSendData();
-        onOpen();
-        if(personal===false){
-            const personalDocumentRef = doc(db,"Database",user.email,"personal",id);
+    await handleSendData();
 
-            // Update the document with new 'body' and 'sex' values
-            updateDoc(personalDocumentRef, {
-                body: body,
-                sex: sex
-            })
-            .then(() => {
-                console.log("Document successfully updated!");
-            })
-            .catch((error) => {
-                console.error("Error updating document: ", error);
-            });
-            
-        }
-        console.log(values)
-       
+    onOpen();
+
+    if (personal === false) {
+        const personalDocumentRef = doc(
+            db,
+            "Database",
+            user.email,
+            "personal",
+            id
+        );
+
+        updateDoc(personalDocumentRef, {
+            body: body,
+            sex: sex
+        })
+        .then(() => {
+            console.log("Document successfully updated!");
+        })
+        .catch((error) => {
+            console.error("Error updating document:", error);
+        });
     }
+
+    console.log(values);
+
+    // Reset only AFTER everything succeeds (optional)
+    // setInput(0);
+}
     
     //console.log(user)
     useEffect(() => {
