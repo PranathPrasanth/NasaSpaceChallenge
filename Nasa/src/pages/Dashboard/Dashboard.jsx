@@ -190,7 +190,7 @@ const Dashboard = () => {
       };
       
     const HandleOnSubmit = async () => {
-        setInput(1)
+        setInput(0)
         
         await handleSendData();
         onOpen();
@@ -418,7 +418,7 @@ const Dashboard = () => {
             </FormControl>
         
         </Box>:null}
-        {input===1?<Box
+        {input===2?<Box
             zIndex={10} 
             w="100%"
             h="200px"
@@ -484,7 +484,7 @@ const Dashboard = () => {
             </FormControl>
         
         </Box>:null}
-        {input===2?<Box
+        {input===3?<Box
             zIndex={10} 
             w="100%"
             h="200px"
@@ -551,7 +551,7 @@ const Dashboard = () => {
         
         </Box>:null}
       
-        {input===2?<Box
+        {input===4?<Box
             zIndex={10} 
             w="100%"
             h="200px"
@@ -618,7 +618,7 @@ const Dashboard = () => {
         
         </Box>:null}
         
-        {input===3?<Box
+        {input===5?<Box
             zIndex={10} 
             w="100%"
             h="200px"
@@ -685,7 +685,7 @@ const Dashboard = () => {
             </FormControl>
         
         </Box>:null}
-        {input===4?<Box
+        {input===6?<Box
             zIndex={10} 
             w="100%"
             h="200px"
@@ -753,7 +753,7 @@ const Dashboard = () => {
             </FormControl>
         
         </Box>:null}
-        {input===4?<Box
+        {input===7?<Box
             zIndex={10} 
             w="100%"
             h="200px"
@@ -811,15 +811,15 @@ const Dashboard = () => {
                 justifyContent="flex-start"
                 alignItems="center"
             >
-                {input!==1&&input!==0?<Button
-                    colorScheme='teal'
-                    size="md"
-                    onClick={()=>{
-                        input>=1?setInput(input-1):null
-                    }}
-                >
-                    Previous
-                </Button>:null}
+                {input > 0 && (
+                    <Button
+                        colorScheme="teal"
+                        onClick={() => setInput((prev) => prev - 1)}
+                    >
+                        Previous
+                    </Button>
+                )}
+                
             </Box>
             <Box
                 zIndex={10} 
@@ -827,30 +827,23 @@ const Dashboard = () => {
                 justifyContent="flex-end"
                 alignItems="center"
             >
-                {input!==4?<Button
-                    colorScheme="teal"
-                    onClick={() => {
-                        console.log("Current input:", input);
-                        setInput((prev) => {
-                            console.log("Next input:", prev + 1);
-                            return prev + 1;
-                        });
-                    }}
-                >
-                    Next
-                </Button>
-                :null}
-                {input===4?<Button
-                    colorScheme='teal'
-                    size="md"
-                    pl="30px"
-                    pr="30px"
-                    onClick={()=>{
-                        HandleOnSubmit()
-                    }}
-                >
-                    Submit
-                </Button>:null}
+                {input < 7 && (
+                    <Button
+                        colorScheme="teal"
+                        onClick={() => setInput((prev) => prev + 1)}
+                    >
+                        Next
+                    </Button>
+                )}
+
+                {input === 7 && (
+                    <Button
+                        colorScheme="teal"
+                        onClick={HandleOnSubmit}
+                    >
+                        Submit
+                    </Button>
+                )}
             </Box>
            
             
