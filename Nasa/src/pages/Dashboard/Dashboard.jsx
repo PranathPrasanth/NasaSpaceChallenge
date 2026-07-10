@@ -43,7 +43,7 @@ const Dashboard = () => {
     const [personal,setPersonal] = useState("");
     const [user,setUser] = useContext(Authentication);
     const [id,setId] = useState("")
-    const [input,setInput ]  = useState(1);
+    const [input,setInput ]  = useState(0);
     const [body,setBody] = useState(null)
     
     //console.log(user)
@@ -120,9 +120,13 @@ const Dashboard = () => {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
       
-          const data = await response.json();
-          console.log('Response from server:', data);
-          setData(data)
+          const result = await response.json();
+          console.log("BACKEND RESPONSE:", result);
+          console.log(result);
+          setData(result);
+          setTimeout(() => {
+            onOpen();
+        }, 100);
           
           /*let carbonFootprintSubcollectionRef = collection(db, 'Database',`${user.email}`, 'carbonfootprint');
           onSnapshot(carbonFootprintSubcollectionRef,(snapshot)=>{
@@ -171,7 +175,7 @@ const Dashboard = () => {
           // Reset loading state or perform other cleanup if needed
           
             
-          setValues({
+          /*setValues({
             diet:"null",
             shower:"null",
             heat:"null",
@@ -185,14 +189,12 @@ const Dashboard = () => {
             Tv:0,
             NewClothes:0,
             InternetDaily:0
-        })
+        })*/
         }
       };
       
     const HandleOnSubmit = async () => {
     await handleSendData();
-
-    onOpen();
 
     if (personal === false) {
         const personalDocumentRef = doc(
