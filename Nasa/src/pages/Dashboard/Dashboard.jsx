@@ -225,20 +225,16 @@ const Dashboard = () => {
 
         setId(docs[0].id);
 
-        if (
-            docs[0]._document.data.value.mapValue.fields.body.stringValue ===
-            "none"
-        ) {
-            setInput(0);
-            console.log("Setting input to 0");
+        const data = docs[0].data();
+
+        if (data.body === "none") {
             setPersonal(false);
+
+            // Only initialize once
+            setInput((prev) => (prev === 1 ? 0 : prev));
         } else {
-            setBody(
-                docs[0]._document.data.value.mapValue.fields.body.stringValue
-            );
-            setSex(
-                docs[0]._document.data.value.mapValue.fields.sex.stringValue
-            );
+            setBody(data.body);
+            setSex(data.sex);
             setPersonal(true);
         }
     });
