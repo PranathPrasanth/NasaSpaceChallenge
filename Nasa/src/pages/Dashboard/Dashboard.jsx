@@ -216,31 +216,8 @@ const Dashboard = () => {
     
     //console.log(user)
     useEffect(() => {
-    if (!personalSubcollectionRef) return;
-
-    const unsubscribe = onSnapshot(personalSubcollectionRef, (snapshot) => {
-        const docs = snapshot.docs;
-
-        if (docs.length === 0) return;
-
-        setId(docs[0].id);
-
-        const data = docs[0].data();
-
-        if (data.body === "none") {
-            setPersonal(false);
-
-            // Only initialize once
-            setInput((prev) => (prev === 1 ? 0 : prev));
-        } else {
-            setBody(data.body);
-            setSex(data.sex);
-            setPersonal(true);
-        }
-    });
-
-    return unsubscribe;
-}, [personalSubcollectionRef]);
+    // TEMPORARILY DISABLED
+}, []);
     
   return (
     <Box
