@@ -230,6 +230,7 @@ const Dashboard = () => {
             "none"
         ) {
             setInput(0);
+            console.log("Setting input to 0");
             setPersonal(false);
         } else {
             setBody(
