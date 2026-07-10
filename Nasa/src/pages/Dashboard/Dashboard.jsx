@@ -828,16 +828,18 @@ const Dashboard = () => {
                 alignItems="center"
             >
                 {input!==4?<Button
-                    colorScheme='teal'
-                    size="md"
-                    pl="30px"
-                    pr="30px"
-                    onClick={()=>{
-                        input<=4?setInput(input+1):null
+                    colorScheme="teal"
+                    onClick={() => {
+                        console.log("Current input:", input);
+                        setInput((prev) => {
+                            console.log("Next input:", prev + 1);
+                            return prev + 1;
+                        });
                     }}
                 >
                     Next
-                </Button>:null}
+                </Button>
+                :null}
                 {input===4?<Button
                     colorScheme='teal'
                     size="md"
